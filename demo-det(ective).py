@@ -1,4 +1,4 @@
-print('Welcome to the Determinant Calculator.')
+print('Welcome to the Demo of det(ective): Determinant Detective.')
 print('This program will calculate the determinant of a 2x2, 3x3, or 4x4 matrices.')
 validSizes = [2,3,4]
 
