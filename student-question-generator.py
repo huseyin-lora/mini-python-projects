@@ -1,14 +1,4 @@
-
-print(
-      """ 
-      --STUDENT QUESTION GENERATOR--
-      • Using this application, you can manage students and questions.
-      • You can also select a random question for a random student.
-      
-      
-      """
-      )
-
+import random
 def showExistingStudents(studentList):
     if(len(studentList) == 0):
         print('\tNo students yet.')
@@ -16,7 +6,7 @@ def showExistingStudents(studentList):
         print('Existing students:')
         counter = 1
         for student in studentList:
-            print(str(counter) + "." + student)
+            print(str(counter) + ". " + student)
             counter += 1
     print('\t')
 
@@ -27,11 +17,14 @@ def showExistingQuestions(questionList):
         print('Existing questions:')
         counter = 1
         for question in questionList:
-            print(str(counter) + "." + question)
+            print(str(counter) + ". " + question)
             counter += 1
     print()
 
 def program():
+    print('--STUDENT QUESTION GENERATOR--')
+    print('• Using this application, you can manage students and questions.')
+    print('• You can also select a random question for a random student. \n')
     print('Choose one of the actions:')
     print('AS -> Add Student')
     print('MS -> Move the student up in the list')
@@ -41,20 +34,21 @@ def program():
     print('AQ -> Add question')
     print('RQ -> Remove question by item number')
     print('RLQ -> Remove the last question')
-    print('RANDQ -> Randomly assign a question to a student')
+    print('G -> Randomly assign a question to a student')
     print('Q -> Quit the application')
     
     questions = []
     students = []
-    validActions = ['as', 'ms', 'rs', 'rls', 'aq', 'rq', 'rlq', 'randq', 'q']
+    validActions = ['as', 'ms', 'rs', 'rls', 'aq', 'rq', 'rlq', 'g', 'q']
     while True: 
         try:
             selectedAction = input('Please choose an action: ').lower()
-            if(selectedAction not in validActions):
+            while(selectedAction not in validActions):
                 print('Please make a valid choice.')
-                continue
+                selectedAction = input('Please choose an action: ').lower()
         except:
             print('Invalid input.')
+        
         # as: Add new student
         if (selectedAction == 'as'):
             studentToBeAdded = input('Enter the student name to be added: ')
@@ -117,16 +111,46 @@ def program():
         
         # rq: Remove the question by item id
         elif (selectedAction == 'rq'):
-            print()
+            showExistingQuestions(questions)
+            rangeOfQuestions = list(range(1, (len(questions) + 1)))
+            
+            while True:
+                try:
+                    questionToBeRemoved = int(input('Enter the question number to be removed: '))
+                    
+                    while (questionToBeRemoved not in rangeOfQuestions):
+                        print('Please enter an integer between ' + str(rangeOfQuestions))
+                        questionToBeRemoved = int(input('Enter the question number to be removed: '))
+                    
+                    selectedQuestionIndex = questionToBeRemoved - 1
+                    break
+                except:
+                    print('Please provide an integer!')
+                    
+                    
+            if(questionToBeRemoved in rangeOfQuestions):
+                questions.pop(selectedQuestionIndex)
+                print('The question is deleted.')
+                print('New ordering of the questions:')
+                showExistingQuestions(questions)
         
-        """
+        # rlq: Remove the last question
         elif (selectedAction == 'rlq'):
-            print()
-        elif (selectedAction == 'randq'):
-            print()
+            lastIndex = len(questions) - 1
+            questions.pop(lastIndex)
+            print('The last student in the list is deleted.')
+            print('New ordering of the questions:')
+            showExistingQuestions(questions)
+        
+        elif (selectedAction == 'g'):
+            randQuestion = random.choice(questions)
+            randStudent = random.choice(students)
+            print(f"'{randQuestion}' is asked for {randStudent} ")
+        
+        
         elif (selectedAction == 'q'):
-            print() 
-        """
+            print('Goodbye')
+            break 
 program()
     
     
