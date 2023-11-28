@@ -89,10 +89,11 @@ def program():
         # rs: Remove the student
         elif (selectedAction == 'rs'):
             studentToBeRemoved = input('Enter the student name to be removed: ')
-            students.remove(studentToBeRemoved)
-            print('The student is deleted.')
-            print('New ordering:')
-            showExistingStudents(students)
+            if studentToBeRemoved in students:
+                students.remove(studentToBeRemoved)
+                print('The student is deleted.')
+                print('New ordering:')
+                showExistingStudents(students)
         
         # rsl: Remove the last student
         elif (selectedAction == 'rls'):
@@ -142,15 +143,15 @@ def program():
             print('New ordering of the questions:')
             showExistingQuestions(questions)
         
+        # g: Randomly assign a question to a student
         elif (selectedAction == 'g'):
             randQuestion = random.choice(questions)
             randStudent = random.choice(students)
             print(f"'{randQuestion}' is asked for {randStudent} ")
         
-        
+        # q: Quit
         elif (selectedAction == 'q'):
             print('Goodbye')
             break 
+
 program()
-    
-    
