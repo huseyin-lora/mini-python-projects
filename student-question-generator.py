@@ -1,99 +1,95 @@
 import random
-def showExistingStudents(studentList):
-    if(len(studentList) == 0):
-        print('\tNo students yet.')
+
+# ! Note: I have changed some action names for clarity.
+# ? Example: Add Question action was 'a', I made it 'AQ'. 
+
+def showListItems(listName, itemName):
+    if(len(listName) == 0):
+        print(f'\tNo {itemName}s yet.')
     else:
-        print('Existing students:')
+        print(f'Existing {itemName}s:')
         counter = 1
-        for student in studentList:
-            print(str(counter) + ". " + student)
+        for itemName in listName:
+            print(f"{counter}. {itemName}")
             counter += 1
     print('\t')
 
-def showExistingQuestions(questionList):
-    if(len(questionList) == 0):
-        print('\tNo questions yet.')
-    else:
-        print('Existing questions:')
-        counter = 1
-        for question in questionList:
-            print(str(counter) + ". " + question)
-            counter += 1
-    print()
-
 def program():
-    print('--STUDENT QUESTION GENERATOR--')
-    print('• Using this application, you can manage students and questions.')
-    print('• You can also select a random question for a random student. \n')
-    print('Choose one of the actions:')
-    print('AS -> Add Student')
-    print('MS -> Move the student up in the list')
-    print('RS -> Remove student by name')
-    print('RLS -> Remove the last student')
-    print('--------------------------------------')
-    print('AQ -> Add question')
-    print('RQ -> Remove question by item number')
-    print('RLQ -> Remove the last question')
-    print('G -> Randomly assign a question to a student')
-    print('Q -> Quit the application')
+    # Printing Initial window
+    messageList = ['\n--STUDENT QUESTION GENERATOR--', '• Using this application, you can manage students and questions.', '• You can also select a random question for a random student. \n', 'Choose one of the actions:', 'AS -> Add Student', 'MS -> Move the student up in the list', 'RS -> Remove student by name', 'RLS -> Remove the last student' , '--------------------------------------', 'AQ -> Add question', 'RQ -> Remove question by item number' , 'RLQ -> Remove the last question', 'G -> Randomly assign a question to a student' , 'Q -> Quit the application']
+    for message in messageList:
+        print(message) 
     
+    # Initializing the lists
     questions = []
     students = []
     validActions = ['as', 'ms', 'rs', 'rls', 'aq', 'rq', 'rlq', 'g', 'q']
     while True: 
-        try:
-            selectedAction = input('Please choose an action: ').lower()
-            while(selectedAction not in validActions):
-                print('Please make a valid choice.')
-                selectedAction = input('Please choose an action: ').lower()
-        except:
-            print('Invalid input.')
+        # Getting action
+        selectedAction = str(input('Please choose an action: ')).lower()
+        # Validating action
+        while(selectedAction not in validActions):
+            print('WARNING: Action does not exist.')
+            selectedAction = input('Please choose one of the listed actions: ').lower()
         
         # as: Add new student
         if (selectedAction == 'as'):
-            studentToBeAdded = input('Enter the student name to be added: ')
-            students.append(studentToBeAdded)
-            print('New student is added.')
-            showExistingStudents(students)
+            # Note: Validation of this input is optional
+            studentToBeAdded = str(input('Enter the student name to be added: '))
+            
+            # Optional Validation: Is the input numeric?
+            while(studentToBeAdded.isnumeric()):
+                print('WARNING: Numeric values are not accepted.')
+                studentToBeAdded = str(input('Enter the student name to be added: '))
+                
+            students.append(studentToBeAdded) # Adding at the end of the list
+            print('New student is added successfully.')
+            showListItems(students, 'student')
             
         # ms: Move the student
         elif (selectedAction == 'ms'):
-            # içinde iki element varsa range(1,3) = [1, 2]
+            # Note: range(1,3) = [1, 2]
             rangeOfStudents = list(range(1, (len(students) + 1)))
-            showExistingStudents(students)
+            showListItems(students, 'student')
+            
             while True:
                 try:
                     studentNumberToBeMovedUp = int(input('Enter the item number to move up: '))
                     
                     while (studentNumberToBeMovedUp not in rangeOfStudents):
-                        print('Please enter an integer between ' + str(rangeOfStudents))
+                        print('WARNING: The item number can have the values in range of ' + str(rangeOfStudents))
                         studentNumberToBeMovedUp = int(input('Enter the item number to move up: '))
             
                     while(studentNumberToBeMovedUp == 1):
-                        studentNumberToBeMovedUp = int(input('You cannot move up the 1st item of the list. Enter the item number to move up: '))
+                        print('WARNING: You cannot move up the 1st item of the list.')
+                        studentNumberToBeMovedUp = int(input('Enter an item number except 1: '))
                     
                     selectedStudentIndex = studentNumberToBeMovedUp - 1
 
                     break
                 except:
-                    print('Please provide an integer!')
+                    print('WARNING: Please provide an integer!')
                     
-            if((studentNumberToBeMovedUp in rangeOfStudents) and (selectedStudentIndex > 0)):
-                # Move the student up in the list
-                students.insert((selectedStudentIndex - 1), students.pop(selectedStudentIndex))
-                print('New ordering:')
-                showExistingStudents(students)
+            # Move the student up in the list
+            students.insert((selectedStudentIndex - 1), students.pop(selectedStudentIndex))
+            print('Selected student is moved up successfully.')
+            print('New ordering:')
+            showListItems(students, 'student')
          
-         # rs: Remove student
-        
         # rs: Remove the student
         elif (selectedAction == 'rs'):
+            print('Current list:')
+            showListItems(students, 'student')
             studentToBeRemoved = input('Enter the student name to be removed: ')
-            if studentToBeRemoved in students:
-                students.remove(studentToBeRemoved)
-                print('The student is deleted.')
-                print('New ordering:')
-                showExistingStudents(students)
+            
+            # Validation of the input
+            while (studentToBeRemoved not in students):
+                print('WARNING: This student is not in the list.')
+                studentToBeRemoved = input('Enter the student name to be removed: ')
+            students.remove(studentToBeRemoved) # Removing by value
+            print('The student is deleted successfully.')
+            print('New ordering:')
+            showListItems(students, 'student')
         
         # rsl: Remove the last student
         elif (selectedAction == 'rls'):
@@ -101,18 +97,24 @@ def program():
             students.pop(lastIndex)
             print('The last student in the list is deleted.')
             print('New ordering:')
-            showExistingStudents(students)
+            showListItems(students, 'student')
         
         # aq: Add new question
         elif (selectedAction == 'aq'):
-            questionToBeAdded = input('Enter a question to be added: ')
+            questionToBeAdded = str(input('Enter a question to be added: '))
+            
+            # Optional Validation: Is the input contains only numeric values? 
+            # (like '235', not '230 + 5 = ?', which is acceptable.)
+            while(questionToBeAdded.isnumeric()):
+                print('WARNING: Question cannot consist of fully numeric values!')
+                questionToBeAdded = str(input('Enter a question to be added: '))
             questions.append(questionToBeAdded)
-            print('New student is added.')
-            showExistingQuestions(questions)
+            print('New question is added successfully.')
+            showListItems(questions, 'question')
         
         # rq: Remove the question by item id
         elif (selectedAction == 'rq'):
-            showExistingQuestions(questions)
+            showListItems(questions, 'question')
             rangeOfQuestions = list(range(1, (len(questions) + 1)))
             
             while True:
@@ -120,7 +122,7 @@ def program():
                     questionToBeRemoved = int(input('Enter the question number to be removed: '))
                     
                     while (questionToBeRemoved not in rangeOfQuestions):
-                        print('Please enter an integer between ' + str(rangeOfQuestions))
+                        print('The item number can have the values in range of ' + str(rangeOfQuestions))
                         questionToBeRemoved = int(input('Enter the question number to be removed: '))
                     
                     selectedQuestionIndex = questionToBeRemoved - 1
@@ -128,20 +130,18 @@ def program():
                 except:
                     print('Please provide an integer!')
                     
-                    
-            if(questionToBeRemoved in rangeOfQuestions):
-                questions.pop(selectedQuestionIndex)
-                print('The question is deleted.')
-                print('New ordering of the questions:')
-                showExistingQuestions(questions)
+            questions.pop(selectedQuestionIndex)
+            print('The question is deleted successfully.')
+            print('New ordering of the questions:')
+            showListItems(questions, 'question')
         
         # rlq: Remove the last question
         elif (selectedAction == 'rlq'):
             lastIndex = len(questions) - 1
             questions.pop(lastIndex)
-            print('The last student in the list is deleted.')
+            print('The last question in the list is deleted successfully.')
             print('New ordering of the questions:')
-            showExistingQuestions(questions)
+            showListItems(questions, 'question')
         
         # g: Randomly assign a question to a student
         elif (selectedAction == 'g'):
